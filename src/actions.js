@@ -19,7 +19,7 @@ module.exports = {
 			setTimeout(function(){
 				dispatch({type:constants.STAND_UP,coward:who});
 			},2000);
-		}
+		};
 	},
 	aimAt: function(killer,victim){
 		// Another async action using the Redux-thunk syntax
@@ -28,6 +28,15 @@ module.exports = {
 			setTimeout(function(){
 				dispatch({type:constants.KILL_HERO,killer:killer,victim:victim});
 			},2000);
+		};
+	},
+	bombAt: function(killer,victim){
+		// Another async action using the Redux-thunk syntax
+		return function(dispatch,getState){
+			dispatch({type:constants.BOMB_AT,killer:killer,victim:victim});
+			setTimeout(function(){
+				dispatch({type:constants.END_BOMB,killer:killer,victim:victim});
+		}, 2000);
 		};
 	}
 };

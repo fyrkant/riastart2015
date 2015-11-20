@@ -8,11 +8,12 @@ var React = require("react"),
 var Home = React.createClass({
 	propTypes: {
 		// redux store state, imported below
-		battle: ptypes.shape({ 
+		battle: ptypes.shape({
 			doing: ptypes.object.isRequired,
 			log: ptypes.arrayOf(ptypes.string)
 		}).isRequired,
 		// redux action hookups, set up below
+		bomb: ptypes.func.isRequired,
 		kill: ptypes.func.isRequired,
 		duck: ptypes.func.isRequired,
 		reset: ptypes.func.isRequired
@@ -21,7 +22,7 @@ var Home = React.createClass({
 		var battleprops = this.props.battle;
 		return (
 			<div>
-				<Battlers doing={battleprops.doing} kill={this.props.kill} duck={this.props.duck} />
+				<Battlers doing={battleprops.doing} kill={this.props.kill} bomb={this.props.bomb} duck={this.props.duck} />
 				<Log log={battleprops.log}/>
 				{ battleprops.standing === 1 && <button onClick={this.props.reset}>Reset</button> }
 			</div>
@@ -38,10 +39,11 @@ var mapStateToProps = function(state){
 
 var mapDispatchToProps = function(dispatch){
 	return {
+		bomb: function(killer,victim){ dispatch(actions.bombAt(killer,victim)); },
 		kill: function(killer,victim){ dispatch(actions.aimAt(killer,victim)); },
 		duck: function(coward){ dispatch(actions.duckDown(coward)); },
 		reset: function(){ dispatch(actions.reset()); }
-	}
+	};
 };
 
 module.exports = ReactRedux.connect(mapStateToProps,mapDispatchToProps)(Home);

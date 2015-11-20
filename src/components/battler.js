@@ -10,6 +10,7 @@ var Battler = React.createClass({
 	propTypes: {
 		name: ptypes.string.isRequired,
 		kill: ptypes.func.isRequired,
+		bomb: ptypes.func.isRequired,
 		duck: ptypes.func.isRequired
 	},
 	render: function(){
@@ -22,12 +23,16 @@ var Battler = React.createClass({
 			},[]),
 			// make buttons for all killable enemies
 			buttons = killable.map(function(opp){
-				return <button key={opp} onClick={p.kill.bind(this,opp)}>{"Kill "+opp}</button>;
+				return 	<div>
+									<button key={opp} onClick={p.kill.bind(this,opp)}>{"Shoot "+opp}</button>
+									<button key={opp + "_bomb"} onClick={p.bomb.bind(this,opp)}>{"Bomb "+opp}</button>
+								</div>;
 			},this).concat(<button key="duck" onClick={p.duck}>duck</button>); // ...as well as a duck button
 		//controls depend on what we're doing
 		var controls = { // using ES6 syntax for dynamic object properties
 			[C.WAITING]: buttons.length > 1 ? buttons : "Winner!!",
 			[C.DUCKING]: "ducking",
+			[C.BOMBING]: "sending bombs...",
 			[C.DEAD]: "...dead...",
 			[C.AIMING]: "aiming!"
 		}[p.doing[name]];

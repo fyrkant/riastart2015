@@ -16,12 +16,27 @@ module.exports = function(state,action){
 			newstate.log.push(action.coward+" ducks down like a coward.");
 			return newstate;
 		case C.STAND_UP:
-			newstate.doing[action.coward] = C.WAITING;
-			newstate.log.push(action.coward+" stands back up.");
+			if (newstate.doing[action.coward] != C.DEAD) {
+				newstate.doing[action.coward] = C.WAITING;
+				newstate.log.push(action.coward+" stands back up.");
+			}
+			return newstate;
+		case C.END_BOMB:
+			newstate.doing[action.victim] = C.DEAD;
+			if (newstate.doing[action.killer] != C.DEAD) {
+				newstate.doing[action.killer] = C.WAITING;
+				newstate.log.push(action.killer+" celebrate the death of "+action.victim+"!");
+			}
+			else
+				newstate.log.push(action.killer+" died before he could celebrate the death of "+action.victim+".");
 			return newstate;
 		case C.AIM_AT:
 			newstate.doing[action.killer] = C.AIMING;
 			newstate.log.push(action.killer+" takes aim at "+action.victim+"!");
+			return newstate;
+		case C.BOMB_AT:
+			newstate.doing[action.killer] = C.BOMBING;
+			newstate.log.push(action.killer+" sends bombs to "+action.victim+"!");
 			return newstate;
 		case C.KILL_HERO:
 			// the shooter has died before he got the shot off
@@ -31,7 +46,7 @@ module.exports = function(state,action){
 				newstate.doing[action.killer] = C.WAITING; // whatever happens we should no longer be aiming
 				// the target is ducking
 				if (state.doing[action.victim] === C.DUCKING) {
-					newstate.log.push(action.victim+" dodges a blast from "+action.killer+"!");
+					newstate.log.push(action.victim+" dodges a shot from "+action.killer+"!");
 				// the target has already been killed
 				} else if (state.doing[action.victim] === C.DEAD) {
 					newstate.log.push(action.killer+" blasts "+action.victim+"'s corpse.");
