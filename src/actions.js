@@ -36,7 +36,7 @@ module.exports = {
 			dispatch({type:constants.BOMB_AT,killer:killer,victim:victim});
 			setTimeout(function(){
 				dispatch({type:constants.END_BOMB,killer:killer,victim:victim});
-		}, 2000);
+			}, 2000);
 		};
 	}
 };
