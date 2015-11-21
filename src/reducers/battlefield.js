@@ -54,6 +54,8 @@ module.exports = function(state,action){
 			return newstate;
 		case C.END_BOMB:
 			newstate.doing[action.victim] = C.DEAD;
+			newstate.standing = newstate.standing - 1;
+			
 			if (newstate.doing[action.killer] != C.DEAD) {
 				newstate.doing[action.killer] = C.WAITING;
 				newstate.log.push(action.killer+" celebrates the death of "+action.victim+"!");
@@ -61,7 +63,7 @@ module.exports = function(state,action){
 			else {
 				newstate.log.push(action.killer+" died before he could celebrate the death of "+action.victim+".");
 			}
-			newstate.standing = newstate.standing - 1;
+
 			if (newstate.standing === 1){
 				newstate.log.push(action.killer+" WINS!!");
 			}
