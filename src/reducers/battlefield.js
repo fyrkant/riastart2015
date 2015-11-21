@@ -1,5 +1,6 @@
 var C = require("../constants"),
-	initialState = require("../initialstate");
+	initialState = require("../initialstate")
+	_ = require("lodash");
 
 /*
 A reducer is a function that takes the current state and an action, and then returns a
@@ -21,23 +22,54 @@ module.exports = function(state,action){
 				newstate.log.push(action.coward+" stands back up.");
 			}
 			return newstate;
-		case C.END_BOMB:
-			newstate.doing[action.victim] = C.DEAD;
-			if (newstate.doing[action.killer] != C.DEAD) {
-				newstate.doing[action.killer] = C.WAITING;
-				newstate.log.push(action.killer+" celebrate the death of "+action.victim+"!");
-			}
-			else
-				newstate.log.push(action.killer+" died before he could celebrate the death of "+action.victim+".");
+		case C.UNLOCK_KEYPAD:
+			newstate.doing[action.coward] = C.UNLOCKING_KEYPAD;
+			newstate.log.push(action.coward + " is unlocking the nuclear launch keypad...");
 			return newstate;
-		case C.AIM_AT:
-			newstate.doing[action.killer] = C.AIMING;
-			newstate.log.push(action.killer+" takes aim at "+action.victim+"!");
+		case C.ENTER_LAUNCH_CODES:			
+			if (newstate.doing[action.coward] !== C.DEAD) {
+				newstate.doing[action.coward] = C.ENTERING_LAUNCH_CODES;
+				newstate.log.push(action.coward + " is entering the nuclear weapons launch codes...");
+			} else {
+				newstate.log.push(action.coward + " died before he could enter the nuclear launch codes.")
+			}
+			return newstate;
+		case C.LAUNCH_MISSILES:
+			if (newstate.doing[action.coward] !== C.DEAD) {
+				newstate.doing[action.coward] = C.ENDS_THE_WORLD;
+				newstate.log.push("All hope is lost. " + action.coward + " launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ");
+			} else {
+				newstate.log.push(action.coward + " died before he could press the red button and launch the nuclear missiles.")
+			}			
+			return newstate;
+		case C.TOTAL_ANNIHILATION:
+			newstate.log.push("A white light, a crack - then silence.");
+			newstate.doing[action.coward] = C.DEAD;
+			_.forEach(action.killable, battler => newstate.doing[battler] = C.DEAD);
+			newstate.standing = 0;
 			return newstate;
 		case C.BOMB_AT:
 			newstate.doing[action.killer] = C.BOMBING;
 			newstate.log.push(action.killer+" sends bombs to "+action.victim+"!");
 			return newstate;
+		case C.END_BOMB:
+			newstate.doing[action.victim] = C.DEAD;
+			if (newstate.doing[action.killer] != C.DEAD) {
+				newstate.doing[action.killer] = C.WAITING;
+				newstate.log.push(action.killer+" celebrates the death of "+action.victim+"!");
+			}
+			else {
+				newstate.log.push(action.killer+" died before he could celebrate the death of "+action.victim+".");
+			}
+			newstate.standing = newstate.standing - 1;
+			if (newstate.standing === 1){
+				newstate.log.push(action.killer+" WINS!!");
+			}
+			return newstate;
+		case C.AIM_AT:
+			newstate.doing[action.killer] = C.AIMING;
+			newstate.log.push(action.killer+" takes aim at "+action.victim+"!");
+			return newstate;		
 		case C.KILL_HERO:
 			// the shooter has died before he got the shot off
 			if (state.doing[action.killer] === C.DEAD){

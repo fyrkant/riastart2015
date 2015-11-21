@@ -16,13 +16,14 @@ var Home = React.createClass({
 		bomb: ptypes.func.isRequired,
 		kill: ptypes.func.isRequired,
 		duck: ptypes.func.isRequired,
+		nuke: ptypes.func.isRequired,
 		reset: ptypes.func.isRequired
 	},
 	render: function(){
 		var battleprops = this.props.battle;
 		return (
 			<div>
-				<Battlers doing={battleprops.doing} kill={this.props.kill} bomb={this.props.bomb} duck={this.props.duck} />
+				<Battlers doing={battleprops.doing} kill={this.props.kill} bomb={this.props.bomb} duck={this.props.duck} nuke={this.props.nuke} />
 				<Log log={battleprops.log}/>
 				{ battleprops.standing === 1 && <button onClick={this.props.reset}>Reset</button> }
 			</div>
@@ -42,6 +43,7 @@ var mapDispatchToProps = function(dispatch){
 		bomb: function(killer,victim){ dispatch(actions.bombAt(killer,victim)); },
 		kill: function(killer,victim){ dispatch(actions.aimAt(killer,victim)); },
 		duck: function(coward){ dispatch(actions.duckDown(coward)); },
+		nuke: function(coward, killable){ dispatch(actions.nuke(coward, killable)); },
 		reset: function(){ dispatch(actions.reset()); }
 	};
 };
