@@ -19,7 +19,7 @@ module.exports = function(){
 				quote: "I can fly!",
 				kills: 0
 			},
-			spiderman: {
+			"spider-man": {
 				quote: "Why don't you love me, Lois?",
 				kills: 0
 			},
@@ -30,7 +30,7 @@ module.exports = function(){
 		},
 		// data on the current battle
 		battlefield: {
-			doing: {batman:C.WAITING,superman:C.WAITING,spiderman:C.WAITING,"he-man":C.WAITING},
+			doing: {batman:C.WAITING,superman:C.WAITING,"spider-man":C.WAITING,"he-man":C.WAITING},
 			standing: 4,
 			log: ["Ready.... fight!"]
 		}

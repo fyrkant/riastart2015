@@ -13,6 +13,8 @@ var React = require('react'),
 	DevTools = require('redux-devtools/lib/react').DevTools,
 	DebugPanel = require('redux-devtools/lib/react').DebugPanel,
 	LogMonitor = require('redux-devtools/lib/react').LogMonitor;
+	
+//require('../css/styles.css');
 
 ReactDOM.render(
 	// The top-level Provider is what allows us to `connect` components to the store
