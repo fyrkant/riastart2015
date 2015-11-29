@@ -7,8 +7,6 @@ var SVG = React.createClass({
 
 		return (
 			<svg xmlns="http://www.w3.org/2000/svg" 
-			 onClick={this.props.onClick}
-			 className={this.props.className}
 			 viewBox={viewbox} 
 			 width={this.props.size} 
 			 height={this.props.size}>

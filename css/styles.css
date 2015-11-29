@@ -23,12 +23,8 @@
 	text-transform: capitalize;
 }
 
-.battler button:nth-of-type(3n+1) {
-	margin-bottom: 2px;
-}
-
-.battler button:nth-of-type(3n) {
-	margin-bottom: 10px;
+.btn-grp {
+	margin-bottom: 5px;
 }
 
 .nuke {

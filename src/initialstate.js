@@ -31,6 +31,7 @@ module.exports = function(){
 		// data on the current battle
 		battlefield: {
 			doing: {batman:C.WAITING,superman:C.WAITING,"spider-man":C.WAITING,"he-man":C.WAITING},
+			defcon: 4,
 			standing: 4,
 			log: ["Ready.... fight!"]
 		}

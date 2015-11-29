@@ -23,13 +23,13 @@ module.exports = {
 	},
 	nuke: function(who, killable) {
 		return function(dispatch, getState) {
-			dispatch({type: constants.UNLOCK_KEYPAD, coward: who});
+			dispatch({type: constants.TAKE_NUKE_STEP, coward: who});
 			setTimeout(function() {
-				dispatch({type: constants.ENTER_LAUNCH_CODES, coward: who});
+				dispatch({type: constants.TAKE_NUKE_STEP, coward: who});
 				setTimeout(function() {
-					dispatch({type: constants.LAUNCH_MISSILES, coward: who});
+					dispatch({type: constants.TAKE_NUKE_STEP, coward: who});
 					setTimeout(function() {
-						dispatch({type: constants.TOTAL_ANNIHILATION, coward: who, killable: killable});
+						dispatch({type: constants.TAKE_NUKE_STEP, coward: who, killable: killable});
 					}, 5000);
 				}, 3000);
 			}, 4000);

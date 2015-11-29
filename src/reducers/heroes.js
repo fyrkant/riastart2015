@@ -13,6 +13,13 @@ module.exports = function(state,action){
 		case constants.KILL_HERO:
 			newstate[action.killer].kills += 1;
 			return newstate;
+		case constants.END_BOMB:
+			newstate[action.killer].kills += 1;
+			return newstate;
+		case constants.TAKE_NUKE_STEP && newstate.defcon === 1:
+			console.log('gello');
+			newstate[action.coward].kills += action.killable.length;
+			return newstate;
 		default: return state || initialState().heroes;
 	}
 };

@@ -22,43 +22,60 @@ module.exports = function(state,action){
 				newstate.log.push(action.coward+" stands back up.");
 			}
 			return newstate;
-		case C.UNLOCK_KEYPAD:
-			newstate.doing[action.coward] = C.UNLOCKING_KEYPAD;
-			newstate.log.push(action.coward + " is unlocking the nuclear launch keypad...");
-			return newstate;
-		case C.ENTER_LAUNCH_CODES:			
-			if (newstate.doing[action.coward] !== C.DEAD) {
-				newstate.doing[action.coward] = C.ENTERING_LAUNCH_CODES;
-				newstate.log.push(action.coward + " is entering the nuclear weapons launch codes...");
-			} else {
-				newstate.log.push(action.coward + " died before he could enter the nuclear launch codes.")
-			}
-			return newstate;
-		case C.LAUNCH_MISSILES:
-			if (newstate.doing[action.coward] !== C.DEAD) {
-				newstate.doing[action.coward] = C.ENDS_THE_WORLD;
-				newstate.log.push("All hope is lost. " + action.coward + " launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ");
-			} else {
-				newstate.log.push(action.coward + " died before he could press the red button and launch the nuclear missiles.")
-			}			
-			return newstate;
-		case C.TOTAL_ANNIHILATION:
-			newstate.log.push("A white light, a crack - then silence.");
-			newstate.doing[action.coward] = C.DEAD;
-			_.forEach(action.killable, battler => newstate.doing[battler] = C.DEAD);
-			newstate.standing = 0;
-			return newstate;
+		case C.TAKE_NUKE_STEP:
+			switch(newstate.defcon){
+				case 4:
+					if (newstate.doing[action.coward] !== C.DEAD) {
+						newstate.defcon -= 1;
+						newstate.doing[action.coward] = C.UNLOCKING_KEYPAD;
+						newstate.log.push(action.coward + " is unlocking the nuclear launch keypad...");
+					}
+					return newstate;
+				case 3:
+					newstate.defcon -= 1;
+					if (newstate.doing[action.coward] !== C.DEAD) {
+						newstate.doing[action.coward] = C.ENTERING_LAUNCH_CODES;
+						newstate.log.push(action.coward + " is entering the nuclear weapons launch codes...");
+					} else {
+						newstate.log.push(action.coward + " died before he could enter the nuclear launch codes.")
+						newstate.defcon = 4;
+					}
+					return newstate;
+				case 2:
+					newstate.defcon -= 1;
+					if (newstate.doing[action.coward] !== C.DEAD) {
+						newstate.doing[action.coward] = C.ENDS_THE_WORLD;
+						newstate.log.push("All hope is lost. " + action.coward + " launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ");
+					} else {
+						newstate.log.push(action.coward + " died before he could press the red button and launch the nuclear missiles.")
+						newstate.defcon = 4;
+					}			
+					return newstate;
+				case 1:
+					newstate.log.push("A white light, a crack - then silence.");
+					newstate.doing[action.coward] = C.DEAD;
+					_.forEach(action.killable, battler => newstate.doing[battler] = C.DEAD);
+					newstate.standing = 0;
+					return newstate;
+			}		
 		case C.BOMB_AT:
 			newstate.doing[action.killer] = C.BOMBING;
 			newstate.log.push(action.killer+" sends bombs to "+action.victim+"!");
 			return newstate;
-		case C.END_BOMB:
+		case C.END_BOMB:			
+			if (_.includes([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
+				newstate.log.push(action.killer+" averted total nuclear annihilation.");
+				newstate.defcon = 4;
+			}
 			newstate.doing[action.victim] = C.DEAD;
 			newstate.standing = newstate.standing - 1;
 			
-			if (newstate.doing[action.killer] != C.DEAD) {
+			if (newstate.doing[action.killer] !== C.DEAD) {
 				newstate.doing[action.killer] = C.WAITING;
 				newstate.log.push(action.killer+" celebrates the death of "+action.victim+"!");
+				if (newstate.standing === 1){
+					newstate.log.push(action.killer+" WINS!!");
+				}
 			}
 			else {
 				newstate.log.push(action.killer+" died before he could celebrate the death of "+action.victim+".");
@@ -90,6 +107,11 @@ module.exports = function(state,action){
 						newstate.log.push(action.killer+" killed "+action.victim+" before he got his shot off!");
 					} else {
 						newstate.log.push(action.killer+" killed "+action.victim+"!");
+					}
+					
+					if (_.includes([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
+						newstate.log.push(action.killer+" averted total nuclear annihilation.");
+						newstate.defcon = 4;
 					}
 					newstate.doing[action.victim] = C.DEAD;
 					newstate.standing = newstate.standing - 1;

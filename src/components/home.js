@@ -3,6 +3,7 @@ var React = require("react"),
 	ReactRedux = require("react-redux"),
 	Log = require("./log"),
 	Battlers = require("./battlers"),
+	DEFCON = require("./defcon"),
 	actions = require("../actions");
 
 var Home = React.createClass({
@@ -24,8 +25,9 @@ var Home = React.createClass({
 		return (
 			<div>
 				<Battlers doing={battleprops.doing} kill={this.props.kill} bomb={this.props.bomb} duck={this.props.duck} nuke={this.props.nuke} />
+				<DEFCON level={this.props.defcon} />
 				<Log log={battleprops.log}/>
-				{ battleprops.standing === 1 && <button onClick={this.props.reset}>Reset</button> }
+				{ battleprops.standing === 1 || battleprops.standing === 0 ? <button onClick={this.props.reset}>Reset</button> : '' }
 			</div>
 		);
 	}
@@ -35,7 +37,7 @@ var Home = React.createClass({
 
 var mapStateToProps = function(state){
 	// This component will have access to `state.battlefield` through `this.props.battle`
-	return {battle:state.battlefield};
+	return {battle:state.battlefield, defcon:state.battlefield.defcon};
 };
 
 var mapDispatchToProps = function(dispatch){

@@ -26,11 +26,13 @@ var Battler = React.createClass({
 		// make buttons for all killable enemies
 		var buttons = killable.map(opp => {
 			// Shoot button
-			return <button key={opp} onClick={p.kill.bind(this,opp)}>{"Shoot "+opp}</button>;
-		}).concat(killable.map(opp => {
-			// Bomb button
-			return <button key={opp + '_bomb'} onClick={p.bomb.bind(this, opp)}>{'Bomb '+opp}</button>
-		})).concat(
+			return (
+				<div className="btn-grp" key={opp + 'btns'} >
+					<button key={opp} onClick={p.kill.bind(this,opp)}>{"Shoot "+opp}</button>
+					<button key={opp + '_bomb'} onClick={p.bomb.bind(this, opp)}>{'Bomb '+opp}</button>
+				</div>
+				);
+		}).concat(
 			// ... as well as nuke and duck
 			<button key="duck" onClick={p.duck}>duck</button>, 
 			<button key="nuke" onClick={p.nuke.bind(this, killable)}>nuke</button>
@@ -38,7 +40,7 @@ var Battler = React.createClass({
 
 		//controls depend on what we're doing
 		var controls = { // using ES6 syntax for dynamic object properties
-			[C.WAITING]: buttons.length === 1 ? "Winner!" : buttons,
+			[C.WAITING]: buttons.length === 2 ? "Winner!" : buttons,
 			[C.DUCKING]: "ducking",
 			[C.BOMBING]: "sending bombs...",
 			[C.UNLOCKING_KEYPAD]: "unlocking keypad...",
