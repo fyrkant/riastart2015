@@ -1,5 +1,4 @@
 let React = require('react');
-let SVG = require('./svg');
 
 let DEFCON = React.createClass({
 	render() {
