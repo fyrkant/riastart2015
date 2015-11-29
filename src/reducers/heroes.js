@@ -15,7 +15,11 @@ module.exports = function(state,action){
 			return newstate;
 		case constants.END_BOMB:
 			newstate[action.killer].kills += 1;
-			return newstate;		
+			return newstate;
+		case constants.TAKE_NUKE_STEP:
+			if (action.killable) {
+				newstate[action.coward].kills += action.killable.length;
+			}
 		default: return state || initialState().heroes;
 	}
 };

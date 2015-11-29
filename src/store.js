@@ -7,22 +7,12 @@ var Redux = require("redux"),
 	heroReducer = require("./reducers/heroes"),
 	battlefieldReducer = require("./reducers/battlefield"),
 	initialState = require("./initialstate"),
-	thunk = require('redux-thunk'), // allows us to use asynchronous actions
-	// Redux DevTools store enhancers
-	devTools = require('redux-devtools').devTools,
-	persistState = require('redux-devtools').persistState;
+	thunk = require('redux-thunk'); // allows us to use asynchronous actions
+	
 
 var rootReducer = Redux.combineReducers({
 	heroes: heroReducer,   // this means heroReducer will operate on appState.heroes
 	battlefield: battlefieldReducer // battlefieldReducer will operate on appState.battlefield,
 });
 
-var finaleCreateStore = Redux.compose(
-	Redux.applyMiddleware(thunk),
-	// Provides support for DevTools:
-    devTools(),
-    // Lets you write ?debug_session=<name> in address bar to persist debug sessions
-    persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
-)((Redux.createStore));
-
-module.exports = finaleCreateStore(rootReducer,initialState());
+module.exports = Redux.applyMiddleware(thunk)(Redux.createStore)(rootReducer,initialState());
