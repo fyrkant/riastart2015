@@ -110,7 +110,7 @@ module.exports = function(state,action){
 					}
 					
 					if (_.includes([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
-						newstate.log.push(action.killer+" averted total nuclear annihilation.");
+						newstate.log.push(action.killer+" averted total nuclear annihilation by killing "+ action.victim);
 						newstate.defcon = 4;
 					}
 					newstate.doing[action.victim] = C.DEAD;
