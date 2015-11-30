@@ -2,31 +2,33 @@
 This component renders out the list of battlers in the battlefield. It is used in the Home component.
 */
 
-var React = require("react"),
-	ptypes = React.PropTypes,
-	Battler = require("./battler"),
-	_ = require("lodash");
+import React, {PropTypes} from 'react';
+import Battler from './battler';
+import {map} from 'lodash';
 
-var Battlers = React.createClass({
-	propTypes: {
-		kill: ptypes.func.isRequired,
-		bomb: ptypes.func.isRequired,
-		nuke: ptypes.func.isRequired,
-		duck: ptypes.func.isRequired,
-		doing: ptypes.object.isRequired
-	},
-	render: function(){
-		var p = this.props; 
-		var boxes = _.map(p.doing, (doing,name) => { // loop through all heroes
-			var kill = p.kill.bind(this,name); // prefill the kill method so that killer is always `name`
-			var bomb = p.bomb.bind(this,name); // prefill the blast method so that killer is always `name`
-			var	nuke = p.nuke.bind(this, name); // prefill the name of the annihilator of worlds
-			var duck = p.duck.bind(this, name); // make sure battler can only duck himself
+class Battlers extends React.Component {
+    render() {
+        let p = this.props;
+        let boxes = map(p.doing, (doing,name) => { // loop through all heroes
+            let kill = p.kill.bind(this,name); // prefill the kill method so that killer is always `name`
+            let bomb = p.bomb.bind(this,name); // prefill the blast method so that killer is always `name`
+            let nuke = p.nuke.bind(this, name); // prefill the name of the annihilator of worlds
+            let duck = p.duck.bind(this, name); // make sure battler can only duck himself
+            let defcon = p.defcon;
 
-			return <Battler key={name} name={name} doing={p.doing} kill={kill} duck={duck} bomb={bomb} nuke={nuke} />;
-		});
-		return <div className="battlers">{boxes}</div>;
-	}
-});
+            return <Battler key={name} name={name} doing={p.doing} kill={kill} duck={duck} bomb={bomb} nuke={nuke} defcon={defcon} />;
+        });
 
-module.exports = Battlers;
+        return <div className="battlers">{boxes}</div>;
+    }
+}
+
+Battlers.propTypes = {
+    kill: PropTypes.func.isRequired,
+    bomb: PropTypes.func.isRequired,
+    nuke: PropTypes.func.isRequired,
+    duck: PropTypes.func.isRequired,
+    doing: PropTypes.object.isRequired
+};
+
+export default Battlers;

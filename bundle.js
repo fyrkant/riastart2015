@@ -46,25 +46,40 @@
 
 	'use strict';
 
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(157);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _reactRouter = __webpack_require__(158);
+
+	var _reactRedux = __webpack_require__(204);
+
+	var _store = __webpack_require__(221);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _routes = __webpack_require__(229);
+
+	var _routes2 = _interopRequireDefault(_routes);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	//require('../css/styles.css');
+
 	/*
 	This is the entry point for the app! From here we merely import our routes definitions,
 	then use React and React-DOM to render it.
 	*/
 
-	var React = __webpack_require__(1),
-	    ReactDOM = __webpack_require__(157),
-	    Router = __webpack_require__(158).Router,
-	    Provider = __webpack_require__(204).Provider,
-	    store = __webpack_require__(221),
-	    routes = __webpack_require__(229);
-
-	//require('../css/styles.css');
-
-	ReactDOM.render(React.createElement(
-		Provider,
-		{ store: store },
-		React.createElement(Router, { routes: routes })
-	), document.getElementById("root"));
+	_reactDom2.default.render(_react2.default.createElement(
+		_reactRedux.Provider,
+		{ store: _store2.default },
+		_react2.default.createElement(_reactRouter.Router, { routes: _routes2.default })
+	), document.getElementById('root'));
 
 /***/ },
 /* 1 */
@@ -25053,34 +25068,63 @@
 /* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	/*
-	This file defines the main Redux Store. It will be required by all "smart" components in the app,
-	in our case Home and Hero.
-	*/
-
-	var Redux = __webpack_require__(211),
-	    heroReducer = __webpack_require__(222),
-	    battlefieldReducer = __webpack_require__(225),
-	    initialState = __webpack_require__(224),
-	    thunk = __webpack_require__(228); // allows us to use asynchronous actions
-
-	var rootReducer = Redux.combineReducers({
-		heroes: heroReducer, // this means heroReducer will operate on appState.heroes
-		battlefield: battlefieldReducer // battlefieldReducer will operate on appState.battlefield,
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
 
-	module.exports = Redux.applyMiddleware(thunk)(Redux.createStore)(rootReducer, initialState());
+	var _redux = __webpack_require__(211);
+
+	var _heroes = __webpack_require__(222);
+
+	var _heroes2 = _interopRequireDefault(_heroes);
+
+	var _battlefield = __webpack_require__(225);
+
+	var _battlefield2 = _interopRequireDefault(_battlefield);
+
+	var _initialstate = __webpack_require__(224);
+
+	var _initialstate2 = _interopRequireDefault(_initialstate);
+
+	var _reduxThunk = __webpack_require__(228);
+
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// allows us to use asynchronous actions
+
+	var rootReducer = (0, _redux.combineReducers)({
+	    heroes: _heroes2.default, // this means heroReducer will operate on appState.heroes
+	    battlefield: _battlefield2.default // battlefieldReducer will operate on appState.battlefield,
+	}); /*
+	    This file defines the main Redux Store. It will be required by all 'smart' components in the app,
+	    in our case Home and Hero.
+	    */
+
+	exports.default = (0, _redux.applyMiddleware)(_reduxThunk2.default)(_redux.createStore)(rootReducer, (0, _initialstate2.default)());
 
 /***/ },
 /* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	var constants = __webpack_require__(223),
-	    initialState = __webpack_require__(224);
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _constants = __webpack_require__(223);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	var _initialstate = __webpack_require__(224);
+
+	var _initialstate2 = _interopRequireDefault(_initialstate);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/*
 	A reducer is a function that takes the current state and an action, and then returns a
@@ -25088,239 +25132,266 @@
 	See `initialstate.js` for a clear view of what it looks like!
 	*/
 
-	module.exports = function (state, action) {
-		var newstate = Object.assign({}, state); // sloppily copying the old state here, so we never mutate it
-		switch (action.type) {
-			case constants.KILL_HERO:
-				newstate[action.killer].kills += 1;
-				return newstate;
-			case constants.END_BOMB:
-				newstate[action.killer].kills += 1;
-				return newstate;
-			case constants.TAKE_NUKE_STEP:
-				if (action.killable) {
-					newstate[action.coward].kills += action.killable.length;
-				}
-			default:
-				return state || initialState().heroes;
-		}
+	exports.default = function (state, action) {
+	    var newstate = Object.assign({}, state); // sloppily copying the old state here, so we never mutate it
+
+	    switch (action.type) {
+	        case _constants2.default.KILL_HERO:
+	            newstate[action.killer].kills += 1;
+	            return newstate;
+	        case _constants2.default.END_BOMB:
+	            newstate[action.killer].kills += 1;
+	            return newstate;
+	        case _constants2.default.TAKE_NUKE_STEP:
+	            if (action.killable) {
+	                newstate[action.coward].kills += action.killable.length;
+	            }
+	        default:
+	            return state || (0, _initialstate2.default)().heroes;
+	    }
 	};
 
 /***/ },
 /* 223 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	/*
 	This file contains all constants in the app.
 	*/
 
 	module.exports = {
-		// ACTION TYPES
-		AIM_AT: "AIM_AT",
-		BOMB_AT: "BOMB_AT",
-		KILL_HERO: "KILL_HERO",
-		RESET: "RESET",
-		UNLOCK_KEYPAD: "UNLOCK_KEYPAD",
-		ENTER_LAUNCH_CODES: "ENTER_LAUNCH_CODES",
-		LAUNCH_MISSILES: "LAUNCH_MISSILES",
-		TOTAL_ANNIHILATION: "TOTAL_ANNIHILATION",
-		TAKE_NUKE_STEP: "TAKE_NUKE_STEP",
-		DUCK_DOWN: "DUCK_DOWN",
-		STAND_UP: "STAND_UP",
-		END_BOMB: "END_BOMB",
+	    // ACTION TYPES
+	    AIM_AT: 'AIM_AT',
+	    BOMB_AT: 'BOMB_AT',
+	    KILL_HERO: 'KILL_HERO',
+	    RESET: 'RESET',
+	    UNLOCK_KEYPAD: 'UNLOCK_KEYPAD',
+	    ENTER_LAUNCH_CODES: 'ENTER_LAUNCH_CODES',
+	    LAUNCH_MISSILES: 'LAUNCH_MISSILES',
+	    TOTAL_ANNIHILATION: 'TOTAL_ANNIHILATION',
+	    TAKE_NUKE_STEP: 'TAKE_NUKE_STEP',
+	    DUCK_DOWN: 'DUCK_DOWN',
+	    STAND_UP: 'STAND_UP',
+	    END_BOMB: 'END_BOMB',
 
-		// HERO STATUSES
-		AIMING: "AIMING",
-		DUCKING: "DUCKING",
-		UNLOCKING_KEYPAD: "UNLOCKING_KEYPAD",
-		ENTERING_LAUNCH_CODES: "ENTERING_LAUNCH_CODES",
-		ENDS_THE_WORLD: "ENDS_THE_WORLD",
-		BOMBING: "BOMBING",
-		WAITING: "WAITING",
-		DEAD: "DEAD"
+	    // HERO STATUSES
+	    AIMING: 'AIMING',
+	    DUCKING: 'DUCKING',
+	    UNLOCKING_KEYPAD: 'UNLOCKING_KEYPAD',
+	    ENTERING_LAUNCH_CODES: 'ENTERING_LAUNCH_CODES',
+	    ENDS_THE_WORLD: 'ENDS_THE_WORLD',
+	    BOMBING: 'BOMBING',
+	    WAITING: 'WAITING',
+	    DEAD: 'DEAD'
 	};
 
 /***/ },
 /* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	/*
-	This is the initial state of the Redux Store. I store it in a separate file because I also use
-	it in the reducers when we do the Reset action.
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	It returns a function instead of an object to make sure no one can change the initial state.
-	*/
+	var _constants = __webpack_require__(223);
 
-	var C = __webpack_require__(223);
+	var _constants2 = _interopRequireDefault(_constants);
 
-	module.exports = function () {
-		return {
-			// "persistent" data on heroes
-			heroes: {
-				batman: {
-					quote: "I'm batman.",
-					kills: 0
-				},
-				superman: {
-					quote: "I can fly!",
-					kills: 0
-				},
-				"spider-man": {
-					quote: "Why don't you love me, Lois?",
-					kills: 0
-				},
-				"he-man": {
-					quote: "By the power of Grayskull!",
-					kills: 0
-				}
-			},
-			// data on the current battle
-			battlefield: {
-				doing: { batman: C.WAITING, superman: C.WAITING, "spider-man": C.WAITING, "he-man": C.WAITING },
-				defcon: 4,
-				standing: 4,
-				log: ["Ready.... fight!"]
-			}
-		};
-	};
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+	    return {
+	        // 'persistent' data on heroes
+	        heroes: {
+	            batman: {
+	                quote: 'I\'m batman.',
+	                kills: 0
+	            },
+	            superman: {
+	                quote: 'I can fly!',
+	                kills: 0
+	            },
+	            'spider-man': {
+	                quote: 'Why don\'t you love me, Lois?',
+	                kills: 0
+	            },
+	            'he-man': {
+	                quote: 'By the power of Grayskull!',
+	                kills: 0
+	            }
+	        },
+	        // data on the current battle
+	        battlefield: {
+	            doing: {
+	                batman: _constants2.default.WAITING,
+	                superman: _constants2.default.WAITING,
+	                'spider-man': _constants2.default.WAITING,
+	                'he-man': _constants2.default.WAITING },
+	            defcon: 4,
+	            standing: 4,
+	            log: ['Ready.... fight!']
+	        }
+	    };
+	}; /*
+	   This is the initial state of the Redux Store. I store it in a separate file because I also use
+	   it in the reducers when we do the Reset action.
+	   
+	   It returns a function instead of an object to make sure no one can change the initial state.
+	   */
 
 /***/ },
 /* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	var C = __webpack_require__(223),
-	    initialState = __webpack_require__(224);
-	_ = __webpack_require__(226);
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _constants = __webpack_require__(223);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	var _initialstate = __webpack_require__(224);
+
+	var _initialstate2 = _interopRequireDefault(_initialstate);
+
+	var _lodash = __webpack_require__(226);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/*
 	A reducer is a function that takes the current state and an action, and then returns a
 	new state. This reducer is responsible for appState.battlefield data.
 	See `initialstate.js` for a clear view of what it looks like!
 	*/
-	module.exports = function (state, action) {
-		var newstate = Object.assign({}, state); // sloppily copying the old state here, so we never mutate it
-		switch (action.type) {
-			case C.RESET:
-				return initialState().battlefield;
-			case C.DUCK_DOWN:
-				newstate.doing[action.coward] = C.DUCKING;
-				newstate.log.push(action.coward + " ducks down like a coward.");
-				return newstate;
-			case C.STAND_UP:
-				if (newstate.doing[action.coward] != C.DEAD) {
-					newstate.doing[action.coward] = C.WAITING;
-					newstate.log.push(action.coward + " stands back up.");
-				}
-				return newstate;
-			case C.TAKE_NUKE_STEP:
-				switch (newstate.defcon) {
-					case 4:
-						if (newstate.doing[action.coward] !== C.DEAD) {
-							newstate.defcon -= 1;
-							newstate.doing[action.coward] = C.UNLOCKING_KEYPAD;
-							newstate.log.push(action.coward + " is unlocking the nuclear launch keypad...");
-						}
-						return newstate;
-					case 3:
-						newstate.defcon -= 1;
-						if (newstate.doing[action.coward] !== C.DEAD) {
-							newstate.doing[action.coward] = C.ENTERING_LAUNCH_CODES;
-							newstate.log.push(action.coward + " is entering the nuclear weapons launch codes...");
-						} else {
-							newstate.log.push(action.coward + " died before he could enter the nuclear launch codes.");
-							newstate.defcon = 4;
-						}
-						return newstate;
-					case 2:
-						newstate.defcon -= 1;
-						if (newstate.doing[action.coward] !== C.DEAD) {
-							newstate.doing[action.coward] = C.ENDS_THE_WORLD;
-							newstate.log.push("All hope is lost. " + action.coward + " launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ");
-						} else {
-							newstate.log.push(action.coward + " died before he could press the red button and launch the nuclear missiles.");
-							newstate.defcon = 4;
-						}
-						return newstate;
-					case 1:
-						newstate.log.push("A white light, a crack - then silence.");
-						newstate.doing[action.coward] = C.DEAD;
-						_.forEach(action.killable, function (battler) {
-							return newstate.doing[battler] = C.DEAD;
-						});
-						newstate.standing = 0;
-						return newstate;
-				}
-			case C.BOMB_AT:
-				newstate.doing[action.killer] = C.BOMBING;
-				newstate.log.push(action.killer + " sends bombs to " + action.victim + "!");
-				return newstate;
-			case C.END_BOMB:
-				if (_.includes([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
-					newstate.log.push(action.killer + " averted total nuclear annihilation.");
-					newstate.defcon = 4;
-				}
-				newstate.doing[action.victim] = C.DEAD;
-				newstate.standing = newstate.standing - 1;
 
-				if (newstate.doing[action.killer] !== C.DEAD) {
-					newstate.doing[action.killer] = C.WAITING;
-					newstate.log.push(action.killer + " celebrates the death of " + action.victim + "!");
-					if (newstate.standing === 1) {
-						newstate.log.push(action.killer + " WINS!!");
-					}
-				} else {
-					newstate.log.push(action.killer + " died before he could celebrate the death of " + action.victim + ".");
-				}
+	exports.default = function (state, action) {
+	    var newstate = Object.assign({}, state); // sloppily copying the old state here, so we never mutate it
 
-				if (newstate.standing === 1) {
-					newstate.log.push(action.killer + " WINS!!");
-				}
-				return newstate;
-			case C.AIM_AT:
-				newstate.doing[action.killer] = C.AIMING;
-				newstate.log.push(action.killer + " takes aim at " + action.victim + "!");
-				return newstate;
-			case C.KILL_HERO:
-				// the shooter has died before he got the shot off
-				if (state.doing[action.killer] === C.DEAD) {
-					newstate.log.push("The trigger finger twitches on " + action.killer + "'s corpse");
-				} else {
-					newstate.doing[action.killer] = C.WAITING; // whatever happens we should no longer be aiming
-					// the target is ducking
-					if (state.doing[action.victim] === C.DUCKING) {
-						newstate.log.push(action.victim + " dodges a shot from " + action.killer + "!");
-						// the target has already been killed
-					} else if (state.doing[action.victim] === C.DEAD) {
-							newstate.log.push(action.killer + " blasts " + action.victim + "'s corpse.");
-							// we kill the target!
-						} else {
-								if (state.doing[action.victim] === C.AIMING) {
-									newstate.log.push(action.killer + " killed " + action.victim + " before he got his shot off!");
-								} else {
-									newstate.log.push(action.killer + " killed " + action.victim + "!");
-								}
+	    switch (action.type) {
+	        case _constants2.default.RESET:
+	            return (0, _initialstate2.default)().battlefield;
+	        case _constants2.default.DUCK_DOWN:
+	            newstate.doing[action.coward] = _constants2.default.DUCKING;
+	            newstate.log.push(action.coward + ' ducks down like a coward.');
+	            return newstate;
+	        case _constants2.default.STAND_UP:
+	            if (newstate.doing[action.coward] != _constants2.default.DEAD) {
+	                newstate.doing[action.coward] = _constants2.default.WAITING;
+	                newstate.log.push(action.coward + ' stands back up.');
+	            }
+	            return newstate;
+	        case _constants2.default.TAKE_NUKE_STEP:
+	            switch (newstate.defcon) {
+	                case 4:
+	                    if (newstate.doing[action.coward] !== _constants2.default.DEAD) {
+	                        newstate.defcon -= 1;
+	                        newstate.doing[action.coward] = _constants2.default.UNLOCKING_KEYPAD;
+	                        newstate.log.push(action.coward + ' is unlocking the nuclear launch keypad...');
+	                    }
+	                    return newstate;
+	                case 3:
+	                    newstate.defcon -= 1;
+	                    if (newstate.doing[action.coward] !== _constants2.default.DEAD) {
+	                        newstate.doing[action.coward] = _constants2.default.ENTERING_LAUNCH_CODES;
+	                        newstate.log.push(action.coward + ' is entering the nuclear weapons launch codes...');
+	                    } else {
+	                        newstate.log.push(action.coward + ' died before he could enter the nuclear launch codes.');
+	                        newstate.defcon = 4;
+	                    }
+	                    return newstate;
+	                case 2:
+	                    newstate.defcon -= 1;
+	                    if (newstate.doing[action.coward] !== _constants2.default.DEAD) {
+	                        newstate.doing[action.coward] = _constants2.default.ENDS_THE_WORLD;
+	                        newstate.log.push('All hope is lost. ' + action.coward + ' launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ');
+	                    } else {
+	                        newstate.log.push(action.coward + ' died before he could press the' + ' red button and launch the nuclear missiles.');
+	                        newstate.defcon = 4;
+	                    }
+	                    return newstate;
+	                case 1:
+	                    newstate.log.push('A white light, a crack - then silence.');
+	                    newstate.doing[action.coward] = _constants2.default.DEAD;
+	                    (0, _lodash.forEach)(action.killable, function (battler) {
+	                        return newstate.doing[battler] = _constants2.default.DEAD;
+	                    });
+	                    newstate.standing = 0;
+	                    return newstate;
+	                default:
+	                    return newstate;
+	            }
+	        case _constants2.default.BOMB_AT:
+	            newstate.doing[action.killer] = _constants2.default.BOMBING;
+	            newstate.log.push(action.killer + ' sends bombs to ' + action.victim + '!');
+	            return newstate;
+	        case _constants2.default.END_BOMB:
+	            if ((0, _lodash.includes)([_constants2.default.UNLOCKING_KEYPAD, _constants2.default.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
+	                newstate.log.push(action.killer + ' averted total nuclear annihilation.');
+	                newstate.defcon = 4;
+	            }
+	            newstate.doing[action.victim] = _constants2.default.DEAD;
+	            newstate.standing = newstate.standing - 1;
 
-								if (_.includes([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
-									newstate.log.push(action.killer + " averted total nuclear annihilation by killing " + action.victim);
-									newstate.defcon = 4;
-								}
-								newstate.doing[action.victim] = C.DEAD;
-								newstate.standing = newstate.standing - 1;
-								if (newstate.standing === 1) {
-									newstate.log.push(action.killer + " WINS!!");
-								}
-							}
-				}
-				return newstate;
-			default:
-				return state || initialState().battlefield;
-		}
+	            if (newstate.doing[action.killer] !== _constants2.default.DEAD) {
+	                newstate.doing[action.killer] = _constants2.default.WAITING;
+	                newstate.log.push(action.killer + ' celebrates the death of ' + action.victim + '!');
+	                if (newstate.standing === 1) {
+	                    newstate.log.push(action.killer + ' WINS!!');
+	                }
+	            } else {
+	                newstate.log.push(action.killer + ' died before he could celebrate the death of ' + action.victim + '.');
+	            }
+
+	            if (newstate.standing === 1) {
+	                newstate.log.push(action.killer + ' WINS!!');
+	            }
+	            return newstate;
+	        case _constants2.default.AIM_AT:
+	            newstate.doing[action.killer] = _constants2.default.AIMING;
+	            newstate.log.push(action.killer + ' takes aim at ' + action.victim + '!');
+	            return newstate;
+	        case _constants2.default.KILL_HERO:
+	            // the shooter has died before he got the shot off
+	            if (state.doing[action.killer] === _constants2.default.DEAD) {
+	                newstate.log.push('The trigger finger twitches on ' + action.killer + '\'s corpse');
+	            } else {
+	                newstate.doing[action.killer] = _constants2.default.WAITING; // whatever happens we should no longer be aiming
+	                // the target is ducking
+	                if (state.doing[action.victim] === _constants2.default.DUCKING) {
+	                    newstate.log.push(action.victim + ' dodges a shot from ' + action.killer + '!');
+	                    // the target has already been killed
+	                } else if (state.doing[action.victim] === _constants2.default.DEAD) {
+	                        newstate.log.push(action.killer + ' blasts ' + action.victim + '\'s corpse.');
+	                        // we kill the target!
+	                    } else {
+	                            if (state.doing[action.victim] === _constants2.default.AIMING) {
+	                                newstate.log.push(action.killer + ' killed ' + action.victim + ' before he got his shot off!');
+	                            } else {
+	                                newstate.log.push(action.killer + ' killed ' + action.victim + '!');
+	                            }
+
+	                            if ((0, _lodash.includes)([_constants2.default.UNLOCKING_KEYPAD, _constants2.default.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
+	                                newstate.log.push(action.killer + ' averted total nuclear annihilation by killing ' + action.victim);
+	                                newstate.defcon = 4;
+	                            }
+	                            newstate.doing[action.victim] = _constants2.default.DEAD;
+	                            newstate.standing = newstate.standing - 1;
+	                            if (newstate.standing === 1) {
+	                                newstate.log.push(action.killer + ' WINS!!');
+	                            }
+	                        }
+	            }
+	            return newstate;
+	        default:
+	            return state || (0, _initialstate2.default)().battlefield;
+	    }
 	};
 
 /***/ },
@@ -37725,63 +37796,51 @@
 
 	'use strict';
 
-	/*
-	This is the "sitemap" of our app! 
-	*/
+	Object.defineProperty(exports, "__esModule", {
+	       value: true
+	});
 
-	var React = __webpack_require__(1),
-	    ReactRouter = __webpack_require__(158),
-	    Route = ReactRouter.Route,
-	    IndexRoute = ReactRouter.IndexRoute,
-	    Wrapper = __webpack_require__(230),
-	    Home = __webpack_require__(232),
-	    Hero = __webpack_require__(238);
+	var _react = __webpack_require__(1);
 
-	module.exports = React.createElement(
-	    Route,
-	    { path: '/', component: Wrapper },
-	    React.createElement(IndexRoute, { component: Home }),
-	    React.createElement(Route, { path: '/hero/:name', component: Hero })
-	);
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(158);
+
+	var _wrapper = __webpack_require__(230);
+
+	var _wrapper2 = _interopRequireDefault(_wrapper);
+
+	var _home = __webpack_require__(231);
+
+	var _home2 = _interopRequireDefault(_home);
+
+	var _hero = __webpack_require__(237);
+
+	var _hero2 = _interopRequireDefault(_hero);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createElement(
+	       _reactRouter.Route,
+	       { component: _wrapper2.default, path: '/' },
+	       _react2.default.createElement(_reactRouter.IndexRoute, { component: _home2.default }),
+	       _react2.default.createElement(_reactRouter.Route, { path: '/hero/:name', component: _hero2.default })
+	); /*
+	   This is the "sitemap" of our app!
+	   */
 
 /***/ },
 /* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	/*
-	This is our top-level component. Sub-components matching specific routes will be
-	contained in `this.props.children` and rendered out.
-	*/
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var React = __webpack_require__(1);
-	var SVG = __webpack_require__(231);
-
-	var Wrapper = React.createClass({
-	    displayName: 'Wrapper',
-
-	    render: function render() {
-	        return React.createElement(
-	            'div',
-	            { className: 'wrapper' },
-	            React.createElement(
-	                'h2',
-	                null,
-	                'Superhero battle arena 3000 - the Nukening!'
-	            ),
-	            this.props.children
-	        );
-	    }
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
-
-	module.exports = Wrapper;
-
-/***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
+	exports.Wrapper = undefined;
 
 	var _react = __webpack_require__(1);
 
@@ -37789,276 +37848,502 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var SVG = _react2.default.createClass({
-		displayName: 'SVG',
-		render: function render() {
-			var viewbox = [-300, -300, 600, 600].join(' ');
-			//[ -(this.props.size / 2), -(this.props.size / 2), this.props.size, this.props.size].join(' ');
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-			return _react2.default.createElement(
-				'svg',
-				{ xmlns: 'http://www.w3.org/2000/svg',
-					viewBox: viewbox,
-					width: this.props.size,
-					height: this.props.size },
-				_react2.default.createElement('circle', { r: '292.3' }),
-				_react2.default.createElement('circle', { r: '50' }),
-				_react2.default.createElement('path', { d: 'M75,0A75,75 0 0,0 37.5-64.951905L125-216.50635A250,250 0 0,1 250,0Z', fill: 'yellow' }),
-				_react2.default.createElement('path', { d: 'M75,0A75,75 0 0,0 37.5-64.951905L125-216.50635A250,250 0 0,1 250,0Z', fill: 'yellow', transform: 'rotate(120)' }),
-				_react2.default.createElement('path', { d: 'M75,0A75,75 0 0,0 37.5-64.951905L125-216.50635A250,250 0 0,1 250,0Z', fill: 'yellow', transform: 'rotate(240)' })
-			);
-		}
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               This is our top-level component. Sub-components matching specific routes will be
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               contained in `this.props.children` and rendered out.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               */
+
+	var Wrapper = exports.Wrapper = (function (_React$Component) {
+	    _inherits(Wrapper, _React$Component);
+
+	    function Wrapper() {
+	        _classCallCheck(this, Wrapper);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Wrapper).apply(this, arguments));
+	    }
+
+	    _createClass(Wrapper, [{
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "wrapper" },
+	                _react2.default.createElement(
+	                    "h2",
+	                    null,
+	                    "Superhero battle arena 3000 - the Nukening!"
+	                ),
+	                this.props.children
+	            );
+	        }
+	    }]);
+
+	    return Wrapper;
+	})(_react2.default.Component);
+
+/***/ },
+/* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
 
-	module.exports = SVG;
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(204);
+
+	var _actions = __webpack_require__(232);
+
+	var _actions2 = _interopRequireDefault(_actions);
+
+	var _log = __webpack_require__(233);
+
+	var _log2 = _interopRequireDefault(_log);
+
+	var _battlers = __webpack_require__(234);
+
+	var _battlers2 = _interopRequireDefault(_battlers);
+
+	var _defcon = __webpack_require__(236);
+
+	var _defcon2 = _interopRequireDefault(_defcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Home = (function (_React$Component) {
+	    _inherits(Home, _React$Component);
+
+	    function Home() {
+	        _classCallCheck(this, Home);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
+	    }
+
+	    _createClass(Home, [{
+	        key: 'render',
+	        value: function render() {
+	            var battleprops = this.props.battle;
+
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(_battlers2.default, { doing: battleprops.doing, kill: this.props.kill, bomb: this.props.bomb, duck: this.props.duck, nuke: this.props.nuke, defcon: this.props.defcon }),
+	                _react2.default.createElement(_defcon2.default, { level: this.props.defcon }),
+	                _react2.default.createElement(_log2.default, { log: battleprops.log }),
+	                battleprops.standing === 1 || battleprops.standing === 0 ? _react2.default.createElement(
+	                    'button',
+	                    { onClick: this.props.reset },
+	                    'Reset'
+	                ) : ''
+	            );
+	        }
+	    }]);
+
+	    return Home;
+	})(_react2.default.Component);
+
+	Home.propTypes = {
+	    // redux store state, imported below
+	    battle: _react.PropTypes.shape({
+	        doing: _react.PropTypes.object.isRequired,
+	        log: _react.PropTypes.arrayOf(_react.PropTypes.string)
+	    }).isRequired,
+	    // redux action hookups, set up below
+	    bomb: _react.PropTypes.func.isRequired,
+	    kill: _react.PropTypes.func.isRequired,
+	    duck: _react.PropTypes.func.isRequired,
+	    nuke: _react.PropTypes.func.isRequired,
+	    reset: _react.PropTypes.func.isRequired,
+	    defcon: _react.PropTypes.number.isRequired
+	};
+
+	// now we connect the component to the Redux store:
+
+	var mapStateToProps = function mapStateToProps(state) {
+	    // This component will have access to `state.battlefield` through `this.props.battle`
+	    return {
+	        battle: state.battlefield,
+	        defcon: state.battlefield.defcon
+	    };
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	    return {
+	        bomb: function bomb(killer, victim) {
+	            dispatch(_actions2.default.bombAt(killer, victim));
+	        },
+	        kill: function kill(killer, victim) {
+	            dispatch(_actions2.default.aimAt(killer, victim));
+	        },
+	        duck: function duck(coward) {
+	            dispatch(_actions2.default.duckDown(coward));
+	        },
+	        nuke: function nuke(coward, killable) {
+	            dispatch(_actions2.default.nuke(coward, killable));
+	        },
+	        reset: function reset() {
+	            dispatch(_actions2.default.reset());
+	        }
+	    };
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
 
 /***/ },
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	var React = __webpack_require__(1),
-	    ptypes = React.PropTypes,
-	    ReactRedux = __webpack_require__(204),
-	    Log = __webpack_require__(233),
-	    Battlers = __webpack_require__(234),
-	    DEFCON = __webpack_require__(236),
-	    actions = __webpack_require__(237);
-
-	var Home = React.createClass({
-		displayName: "Home",
-
-		propTypes: {
-			// redux store state, imported below
-			battle: ptypes.shape({
-				doing: ptypes.object.isRequired,
-				log: ptypes.arrayOf(ptypes.string)
-			}).isRequired,
-			// redux action hookups, set up below
-			bomb: ptypes.func.isRequired,
-			kill: ptypes.func.isRequired,
-			duck: ptypes.func.isRequired,
-			nuke: ptypes.func.isRequired,
-			reset: ptypes.func.isRequired
-		},
-		render: function render() {
-			var battleprops = this.props.battle;
-			return React.createElement(
-				"div",
-				null,
-				React.createElement(Battlers, { doing: battleprops.doing, kill: this.props.kill, bomb: this.props.bomb, duck: this.props.duck, nuke: this.props.nuke }),
-				React.createElement(DEFCON, { level: this.props.defcon }),
-				React.createElement(Log, { log: battleprops.log }),
-				battleprops.standing === 1 || battleprops.standing === 0 ? React.createElement(
-					"button",
-					{ onClick: this.props.reset },
-					"Reset"
-				) : ''
-			);
-		}
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
 
-	// now we connect the component to the Redux store:
+	var _constants = __webpack_require__(223);
 
-	var mapStateToProps = function mapStateToProps(state) {
-		// This component will have access to `state.battlefield` through `this.props.battle`
-		return { battle: state.battlefield, defcon: state.battlefield.defcon };
-	};
+	var _constants2 = _interopRequireDefault(_constants);
 
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		return {
-			bomb: function bomb(killer, victim) {
-				dispatch(actions.bombAt(killer, victim));
-			},
-			kill: function kill(killer, victim) {
-				dispatch(actions.aimAt(killer, victim));
-			},
-			duck: function duck(coward) {
-				dispatch(actions.duckDown(coward));
-			},
-			nuke: function nuke(coward, killable) {
-				dispatch(actions.nuke(coward, killable));
-			},
-			reset: function reset() {
-				dispatch(actions.reset());
-			}
-		};
-	};
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	module.exports = ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Home);
+	exports.default = {
+	    reset: function reset() {
+	        // A normal action creator, returns a simple object describing the action.
+	        return { type: _constants2.default.RESET };
+	    },
+	    duckDown: function duckDown(who) {
+	        // here we take advantage of Redux-thunk; instead of returning an object describing an action,
+	        // we return a function that takes dispatch and getState as arguments. This function can then
+	        // invoke dispatch, now or later using setTimeout or similar.
+	        return function (dispatch, getState) {
+	            dispatch({ type: _constants2.default.DUCK_DOWN, coward: who });
+	            setTimeout(function () {
+	                dispatch({ type: _constants2.default.STAND_UP, coward: who });
+	            }, 2000);
+	        };
+	    },
+	    nuke: function nuke(who, killable) {
+	        return function (dispatch, getState) {
+	            dispatch({ type: _constants2.default.TAKE_NUKE_STEP, coward: who });
+	            setTimeout(function () {
+	                dispatch({ type: _constants2.default.TAKE_NUKE_STEP, coward: who });
+	                setTimeout(function () {
+	                    dispatch({ type: _constants2.default.TAKE_NUKE_STEP, coward: who });
+	                    setTimeout(function () {
+	                        dispatch({ type: _constants2.default.TAKE_NUKE_STEP,
+	                            coward: who, killable: killable });
+	                    }, 5000);
+	                }, 3000);
+	            }, 4000);
+	        };
+	    },
+	    aimAt: function aimAt(killer, victim) {
+	        // Another async action using the Redux-thunk syntax
+	        return function (dispatch, getState) {
+	            dispatch({ type: _constants2.default.AIM_AT, killer: killer, victim: victim });
+	            setTimeout(function () {
+	                dispatch({ type: _constants2.default.KILL_HERO,
+	                    killer: killer, victim: victim });
+	            }, 2000);
+	        };
+	    },
+	    bombAt: function bombAt(killer, victim) {
+	        // Another async action using the Redux-thunk syntax
+	        return function (dispatch, getState) {
+	            dispatch({ type: _constants2.default.BOMB_AT, killer: killer, victim: victim });
+	            setTimeout(function () {
+	                dispatch({ type: _constants2.default.END_BOMB,
+	                    killer: killer, victim: victim });
+	            }, 2000);
+	        };
+	    }
+	}; /*
+	   This module contains action creators. They are functions which will return an object describing the actions.
+	   These actions are imported by Redux-aware components who need them, in our case it is just Home.
+	   */
 
 /***/ },
 /* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	// A simple component to list the event log on the main battle page. No callbacks.
-	// Used by Home.
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var React = __webpack_require__(1),
-	    ptypes = React.PropTypes;
-
-	var Log = React.createClass({
-		displayName: "Log",
-
-		propTypes: {
-			log: ptypes.arrayOf(ptypes.string).isRequired
-		},
-		render: function render() {
-			var list = this.props.log.map(function (txt, n) {
-				return React.createElement(
-					"li",
-					{ key: n },
-					txt
-				);
-			});
-			return React.createElement(
-				"ul",
-				null,
-				list
-			);
-		}
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
 
-	module.exports = Log;
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // A simple component to list the event log on the main battle page. No callbacks.
+	// Used by Home.
+
+	var Log = (function (_React$Component) {
+	    _inherits(Log, _React$Component);
+
+	    function Log() {
+	        _classCallCheck(this, Log);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Log).apply(this, arguments));
+	    }
+
+	    _createClass(Log, [{
+	        key: 'render',
+	        value: function render() {
+	            var list = this.props.log.map(function (txt, n) {
+	                return _react2.default.createElement(
+	                    'li',
+	                    { key: n },
+	                    txt
+	                );
+	            });
+
+	            return _react2.default.createElement(
+	                'ul',
+	                null,
+	                list
+	            );
+	        }
+	    }]);
+
+	    return Log;
+	})(_react2.default.Component);
+
+	Log.propTypes = {
+	    log: _react.PropTypes.arrayOf(_react.PropTypes.string).isRequired
+	};
+
+	exports.default = Log;
 
 /***/ },
 /* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	/*
-	This component renders out the list of battlers in the battlefield. It is used in the Home component.
-	*/
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var React = __webpack_require__(1),
-	    ptypes = React.PropTypes,
-	    Battler = __webpack_require__(235),
-	    _ = __webpack_require__(226);
-
-	var Battlers = React.createClass({
-		displayName: "Battlers",
-
-		propTypes: {
-			kill: ptypes.func.isRequired,
-			bomb: ptypes.func.isRequired,
-			nuke: ptypes.func.isRequired,
-			duck: ptypes.func.isRequired,
-			doing: ptypes.object.isRequired
-		},
-		render: function render() {
-			var _this = this;
-
-			var p = this.props;
-			var boxes = _.map(p.doing, function (doing, name) {
-				// loop through all heroes
-				var kill = p.kill.bind(_this, name); // prefill the kill method so that killer is always `name`
-				var bomb = p.bomb.bind(_this, name); // prefill the blast method so that killer is always `name`
-				var nuke = p.nuke.bind(_this, name); // prefill the name of the annihilator of worlds
-				var duck = p.duck.bind(_this, name); // make sure battler can only duck himself
-
-				return React.createElement(Battler, { key: name, name: name, doing: p.doing, kill: kill, duck: duck, bomb: bomb, nuke: nuke });
-			});
-			return React.createElement(
-				"div",
-				{ className: "battlers" },
-				boxes
-			);
-		}
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
 
-	module.exports = Battlers;
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _battler = __webpack_require__(235);
+
+	var _battler2 = _interopRequireDefault(_battler);
+
+	var _lodash = __webpack_require__(226);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               This component renders out the list of battlers in the battlefield. It is used in the Home component.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               */
+
+	var Battlers = (function (_React$Component) {
+	    _inherits(Battlers, _React$Component);
+
+	    function Battlers() {
+	        _classCallCheck(this, Battlers);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Battlers).apply(this, arguments));
+	    }
+
+	    _createClass(Battlers, [{
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+
+	            var p = this.props;
+	            var boxes = (0, _lodash.map)(p.doing, function (doing, name) {
+	                // loop through all heroes
+	                var kill = p.kill.bind(_this2, name); // prefill the kill method so that killer is always `name`
+	                var bomb = p.bomb.bind(_this2, name); // prefill the blast method so that killer is always `name`
+	                var nuke = p.nuke.bind(_this2, name); // prefill the name of the annihilator of worlds
+	                var duck = p.duck.bind(_this2, name); // make sure battler can only duck himself
+	                var defcon = p.defcon;
+
+	                return _react2.default.createElement(_battler2.default, { key: name, name: name, doing: p.doing, kill: kill, duck: duck, bomb: bomb, nuke: nuke, defcon: defcon });
+	            });
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'battlers' },
+	                boxes
+	            );
+	        }
+	    }]);
+
+	    return Battlers;
+	})(_react2.default.Component);
+
+	Battlers.propTypes = {
+	    kill: _react.PropTypes.func.isRequired,
+	    bomb: _react.PropTypes.func.isRequired,
+	    nuke: _react.PropTypes.func.isRequired,
+	    duck: _react.PropTypes.func.isRequired,
+	    doing: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = Battlers;
 
 /***/ },
 /* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _lodash = __webpack_require__(226);
+
+	var _reactRouter = __webpack_require__(158);
+
+	var _constants = __webpack_require__(223);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	// This component shows a single battler in the arena. It is used by the Battlers component
-	var React = __webpack_require__(1),
-	    ptypes = React.PropTypes,
-	    _ = __webpack_require__(226),
-	    Link = __webpack_require__(158).Link,
-	    C = __webpack_require__(223);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Battler = React.createClass({
-		displayName: "Battler",
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-		propTypes: {
-			name: ptypes.string.isRequired,
-			kill: ptypes.func.isRequired,
-			bomb: ptypes.func.isRequired,
-			nuke: ptypes.func.isRequired,
-			duck: ptypes.func.isRequired
-		},
-		render: function render() {
-			var _this = this,
-			    _C$WAITING$C$DUCKING$;
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // This component shows a single battler in the arena. It is used by the Battlers component
 
-			var p = this.props;
-			var name = p.name;
-			var doing = p.doing;
+	var Battler = (function (_React$Component) {
+	    _inherits(Battler, _React$Component);
 
-			// list all enemies that aren't dead yet
-			var killable = _.reduce(doing, function (list, status, opp) {
-				return status !== C.DEAD && opp !== name ? list.concat(opp) : list;
-			}, []);
+	    function Battler() {
+	        _classCallCheck(this, Battler);
 
-			// make buttons for all killable enemies
-			var buttons = killable.map(function (opp) {
-				// Shoot button
-				return React.createElement(
-					"div",
-					{ className: "btn-grp", key: opp + 'btns' },
-					React.createElement(
-						"button",
-						{ key: opp, onClick: p.kill.bind(_this, opp) },
-						"Shoot " + opp
-					),
-					React.createElement(
-						"button",
-						{ key: opp + '_bomb', onClick: p.bomb.bind(_this, opp) },
-						'Bomb ' + opp
-					)
-				);
-			}).concat(
-			// ... as well as nuke and duck
-			React.createElement(
-				"button",
-				{ key: "duck", onClick: p.duck },
-				"duck"
-			), React.createElement(
-				"button",
-				{ key: "nuke", onClick: p.nuke.bind(this, killable) },
-				"nuke"
-			));
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Battler).apply(this, arguments));
+	    }
 
-			//controls depend on what we're doing
-			var controls = (_C$WAITING$C$DUCKING$ = {}, _defineProperty(_C$WAITING$C$DUCKING$, C.WAITING, buttons.length === 2 ? "Winner!" : buttons), _defineProperty(_C$WAITING$C$DUCKING$, C.DUCKING, "ducking"), _defineProperty(_C$WAITING$C$DUCKING$, C.BOMBING, "sending bombs..."), _defineProperty(_C$WAITING$C$DUCKING$, C.UNLOCKING_KEYPAD, "unlocking keypad..."), _defineProperty(_C$WAITING$C$DUCKING$, C.ENTERING_LAUNCH_CODES, "entering code..."), _defineProperty(_C$WAITING$C$DUCKING$, C.ENDS_THE_WORLD, "says his goodbyes..."), _defineProperty(_C$WAITING$C$DUCKING$, C.DEAD, "...dead..."), _defineProperty(_C$WAITING$C$DUCKING$, C.AIMING, "aiming!"), _C$WAITING$C$DUCKING$)[p.doing[name]];
-			return React.createElement(
-				"div",
-				{ className: "battler" },
-				React.createElement(
-					Link,
-					{ to: "/hero/" + name },
-					name
-				),
-				React.createElement(
-					"div",
-					null,
-					controls
-				)
-			);
-		}
-	});
+	    _createClass(Battler, [{
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this,
+	                _C$WAITING$C$DUCKING$;
 
-	module.exports = Battler;
+	            var p = this.props;
+	            var name = p.name;
+	            var doing = p.doing;
+
+	            // list all enemies that aren't dead yet
+	            var killable = (0, _lodash.reduce)(doing, function (list, status, opp) {
+	                return status !== _constants2.default.DEAD && opp !== name ? list.concat(opp) : list;
+	            }, []);
+
+	            // make buttons for all killable enemies
+	            var buttons = killable.map(function (opp) {
+	                // Shoot button
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 'btn-grp', key: opp + 'btns' },
+	                    _react2.default.createElement(
+	                        'button',
+	                        { key: opp, onClick: p.kill.bind(_this2, opp) },
+	                        'Shoot ' + opp
+	                    ),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { key: opp + '_bomb', onClick: p.bomb.bind(_this2, opp) },
+	                        'Bomb ' + opp
+	                    )
+	                );
+	            }).concat(
+	            // ... as well as nuke and duck
+	            _react2.default.createElement(
+	                'div',
+	                { className: 'btn-grp', key: name + 'ducknuke' },
+	                _react2.default.createElement(
+	                    'button',
+	                    { key: 'duck', onClick: p.duck },
+	                    'duck'
+	                ),
+	                //Only one nuker at a time, please!
+	                p.defcon === 4 ? _react2.default.createElement(
+	                    'button',
+	                    { key: 'nuke', onClick: p.nuke.bind(this, killable) },
+	                    'nuke'
+	                ) : ''
+	            ));
+
+	            //controls depend on what we're doing
+	            var controls = (_C$WAITING$C$DUCKING$ = {}, _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.WAITING, buttons.length === 2 ? 'Winner!' : buttons), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.DUCKING, 'ducking'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.BOMBING, 'sending bombs...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.UNLOCKING_KEYPAD, 'unlocking keypad...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.ENTERING_LAUNCH_CODES, 'entering code...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.ENDS_THE_WORLD, 'says his goodbyes...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.DEAD, '...dead...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.AIMING, 'aiming!'), _C$WAITING$C$DUCKING$)[p.doing[name]];
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'battler' },
+	                _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { to: '/hero/' + name },
+	                    name
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    null,
+	                    controls
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Battler;
+	})(_react2.default.Component);
+
+	Battler.propTypes = {
+	    name: _react.PropTypes.string.isRequired,
+	    kill: _react.PropTypes.func.isRequired,
+	    bomb: _react.PropTypes.func.isRequired,
+	    nuke: _react.PropTypes.func.isRequired,
+	    duck: _react.PropTypes.func.isRequired
+	};
+
+	exports.default = Battler;
 
 /***/ },
 /* 236 */
@@ -38066,176 +38351,175 @@
 
 	'use strict';
 
-	var React = __webpack_require__(1);
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var DEFCON = React.createClass({
-		displayName: 'DEFCON',
-		render: function render() {
-			var bgcs = ['red', 'orange', 'yellow', 'green'];
-
-			var style = {
-				color: this.props.level === 3 ? 'black' : 'white',
-				'backgroundColor': bgcs[this.props.level - 1],
-				width: "620px",
-				margin: "6px",
-				textAlign: "center"
-
-			};
-			return React.createElement(
-				'div',
-				{ style: style },
-				React.createElement(
-					'h2',
-					null,
-					'DEFCON THREAT LEVEL: ' + this.props.level
-				)
-			);
-		}
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
 	});
 
-	module.exports = DEFCON;
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DEFCON = (function (_React$Component) {
+	    _inherits(DEFCON, _React$Component);
+
+	    function DEFCON() {
+	        _classCallCheck(this, DEFCON);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(DEFCON).apply(this, arguments));
+	    }
+
+	    _createClass(DEFCON, [{
+	        key: 'render',
+	        value: function render() {
+	            var bgcs = ['red', 'orange', 'yellow', 'green'];
+
+	            var style = {
+	                color: this.props.level === 3 ? 'black' : 'white',
+	                'backgroundColor': bgcs[this.props.level - 1],
+	                width: '620px',
+	                margin: '6px',
+	                textAlign: 'center'
+	            };
+
+	            return _react2.default.createElement(
+	                'div',
+	                { style: style },
+	                _react2.default.createElement(
+	                    'h2',
+	                    null,
+	                    'DEFCON THREAT LEVEL: ' + this.props.level
+	                )
+	            );
+	        }
+	    }]);
+
+	    return DEFCON;
+	})(_react2.default.Component);
+
+	DEFCON.propTypes = {
+	    level: _react2.default.PropTypes.number.isRequired
+	};
+
+	exports.default = DEFCON;
 
 /***/ },
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	/*
-	This module contains action creators. They are functions which will return an object describing the actions.
-	These actions are imported by Redux-aware components who need them, in our case it is just Home.
-	*/
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var constants = __webpack_require__(223);
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	module.exports = {
-		reset: function reset() {
-			// A normal action creator, returns a simple object describing the action.
-			return { type: constants.RESET };
-		},
-		duckDown: function duckDown(who) {
-			// here we take advantage of Redux-thunk; instead of returning an object describing an action,
-			// we return a function that takes dispatch and getState as arguments. This function can then
-			// invoke dispatch, now or later using setTimeout or similar.
-			return function (dispatch, getState) {
-				dispatch({ type: constants.DUCK_DOWN, coward: who });
-				setTimeout(function () {
-					dispatch({ type: constants.STAND_UP, coward: who });
-				}, 2000);
-			};
-		},
-		nuke: function nuke(who, killable) {
-			return function (dispatch, getState) {
-				dispatch({ type: constants.TAKE_NUKE_STEP, coward: who });
-				setTimeout(function () {
-					dispatch({ type: constants.TAKE_NUKE_STEP, coward: who });
-					setTimeout(function () {
-						dispatch({ type: constants.TAKE_NUKE_STEP, coward: who });
-						setTimeout(function () {
-							dispatch({ type: constants.TAKE_NUKE_STEP, coward: who, killable: killable });
-						}, 5000);
-					}, 3000);
-				}, 4000);
-			};
-		},
-		aimAt: function aimAt(killer, victim) {
-			// Another async action using the Redux-thunk syntax
-			return function (dispatch, getState) {
-				dispatch({ type: constants.AIM_AT, killer: killer, victim: victim });
-				setTimeout(function () {
-					dispatch({ type: constants.KILL_HERO, killer: killer, victim: victim });
-				}, 2000);
-			};
-		},
-		bombAt: function bombAt(killer, victim) {
-			// Another async action using the Redux-thunk syntax
-			return function (dispatch, getState) {
-				dispatch({ type: constants.BOMB_AT, killer: killer, victim: victim });
-				setTimeout(function () {
-					dispatch({ type: constants.END_BOMB, killer: killer, victim: victim });
-				}, 2000);
-			};
-		}
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(158);
+
+	var _reactRedux = __webpack_require__(204);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // This component shows a single battler in the arena.
+
+	var Hero = (function (_React$Component) {
+	    _inherits(Hero, _React$Component);
+
+	    function Hero() {
+	        _classCallCheck(this, Hero);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Hero).apply(this, arguments));
+	    }
+
+	    _createClass(Hero, [{
+	        key: 'render',
+	        value: function render() {
+	            var name = this.props.params.name;
+	            var data = this.props.heroes[name];
+
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    _react2.default.createElement(
+	                        _reactRouter.Link,
+	                        { to: '/' },
+	                        'Back to arena'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    'Here\'s some info on ',
+	                    this.props.params.name,
+	                    ':'
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    _react2.default.createElement(
+	                        'strong',
+	                        null,
+	                        'Quote:'
+	                    ),
+	                    ' ',
+	                    data.quote,
+	                    ' '
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    _react2.default.createElement(
+	                        'strong',
+	                        null,
+	                        'Kills:'
+	                    ),
+	                    ' ',
+	                    data.kills,
+	                    ' '
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Hero;
+	})(_react2.default.Component);
+
+	Hero.propTypes = {
+	    params: _react.PropTypes.shape({ name: _react.PropTypes.string.isRequired }).isRequired, // will be provided by react-router
+	    heroes: _react.PropTypes.object.isRequired // will be provided by react-redux
 	};
 
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	// This component shows a single battler in the arena.
-
-	var React = __webpack_require__(1),
-	    ptypes = React.PropTypes,
-	    Link = __webpack_require__(158).Link,
-	    ReactRedux = __webpack_require__(204);
-
-	var Hero = React.createClass({
-		displayName: "Hero",
-
-		propTypes: {
-			params: ptypes.shape({ name: ptypes.string.isRequired }).isRequired, // will be provided by react-router
-			heroes: ptypes.object.isRequired // will be provided by react-redux
-		},
-		render: function render() {
-			var name = this.props.params.name,
-			    data = this.props.heroes[name];
-			return React.createElement(
-				"div",
-				null,
-				React.createElement(
-					"p",
-					null,
-					React.createElement(
-						Link,
-						{ to: "/" },
-						"Back to arena"
-					)
-				),
-				React.createElement(
-					"p",
-					null,
-					"Here's some info on ",
-					this.props.params.name,
-					":"
-				),
-				React.createElement(
-					"p",
-					null,
-					React.createElement(
-						"strong",
-						null,
-						"Quote:"
-					),
-					" ",
-					data.quote,
-					" "
-				),
-				React.createElement(
-					"p",
-					null,
-					React.createElement(
-						"strong",
-						null,
-						"Kills:"
-					),
-					" ",
-					data.kills,
-					" "
-				)
-			);
-		}
-	});
+	exports.default = Hero;
 
 	// connect to Redux store
 
 	var mapStateToProps = function mapStateToProps(state) {
-		// This component will have access to `appstate.heroes` through `this.props.heroes`
-		return { heroes: state.heroes };
+	    // This component will have access to `appstate.heroes` through `this.props.heroes`
+	    return { heroes: state.heroes };
 	};
 
-	module.exports = ReactRedux.connect(mapStateToProps)(Hero);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Hero);
 
 /***/ }
 /******/ ]);
