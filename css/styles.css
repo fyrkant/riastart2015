@@ -1,7 +1,7 @@
 .battler {
 	float: left;
 	width: 125px;
-	height: 205px;
+	height: 100%;
 	margin: 0.5em;
 	border: 1px solid black;
 	padding: 0.5em;

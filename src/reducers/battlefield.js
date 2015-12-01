@@ -1,4 +1,4 @@
-import C from '../constants';
+import * as C from '../constants';
 import initialState from '../initialstate';
 import {includes, forEach} from 'lodash';
 

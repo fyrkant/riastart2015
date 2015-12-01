@@ -6,35 +6,30 @@ import C from '../constants';
 
 class Battler extends React.Component {
     render() {
-        var p = this.props;
-        var name = p.name;
-        var doing = p.doing;
+        let p = this.props;
+        let {name, doing} = p;
 
         // list all enemies that aren't dead yet
-        var killable = reduce(doing,(list,status,opp) => {
+        let killable = reduce(doing,(list,status,opp) => {
             return status !== C.DEAD && opp !== name ? list.concat(opp) : list;
         },[]);
-
         // make buttons for all killable enemies
-        var buttons = killable.map(opp => {
-            // Shoot button
-            return (
+        let buttons = [];
+
+        for (let opp of killable) {
+            buttons.push(
                 <div className="btn-grp" key={opp + 'btns'} >
                     <button key={opp} onClick={p.kill.bind(this, opp)}>{'Shoot ' + opp}</button>
                     <button key={opp + '_bomb'} onClick={p.bomb.bind(this, opp)}>{'Bomb ' + opp}</button>
-                </div>
-                );
-        }).concat(
+                </div>);
+        }
+        buttons.push(
             // ... as well as nuke and duck
+            // checks defcon level so that only one nuke can be launched at a time
             <div className="btn-grp" key={name + 'ducknuke'}>
                 <button key="duck" onClick={p.duck}>duck</button>
-                { //Only one nuker at a time, please!
-                    p.defcon === 4 ?
-                    <button key="nuke" onClick={p.nuke.bind(this, killable)}>nuke</button> :
-                    ''
-                }
-            </div>
-        );
+                {p.defcon === 4 ? <button key="nuke" onClick={p.nuke.bind(this, killable)}>nuke</button> : ''}
+            </div>);
 
         //controls depend on what we're doing
         let controls = { // using ES6 syntax for dynamic object properties

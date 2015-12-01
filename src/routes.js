@@ -4,7 +4,7 @@ This is the "sitemap" of our app!
 
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
-import Wrapper from './components/wrapper';
+import {Wrapper} from './components/wrapper';
 import Home from './components/home';
 import Hero from './components/hero';
 

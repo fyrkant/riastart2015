@@ -4,15 +4,13 @@ then use React and React-DOM to render it.
 */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {render} from 'react-dom';
 import {Router} from 'react-router';
 import {Provider} from 'react-redux';
 import store from './store';
 import routes from './routes';
 
-//require('../css/styles.css');
-
-ReactDOM.render(
+render(
 	<Provider store={store}>
 		<Router routes={routes}/>
 	</Provider>,
