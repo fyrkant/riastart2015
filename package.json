@@ -19,7 +19,8 @@
     "redux-devtools": "^2.1.5",
     "redux-thunk": "=1.0.0",
     "style-loader": "^0.13.0",
-    "webpack": "^1.12.8"
+    "webpack": "^1.12.8",
+    "webpack-dev-server": "^1.14.0"
   },
   "scripts": {
     "build": "webpack",
