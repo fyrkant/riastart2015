@@ -33,7 +33,7 @@ class Battler extends React.Component {
 
         //controls depend on what we're doing
         let controls = { // using ES6 syntax for dynamic object properties
-            [C.WAITING]: buttons.length === 2 ? 'Winner!' : buttons,
+            [C.WAITING]: buttons.length > 1 ? buttons : 'Winner!',
             [C.DUCKING]: 'ducking',
             [C.BOMBING]: 'sending bombs...',
             [C.UNLOCKING_KEYPAD]: 'unlocking keypad...',

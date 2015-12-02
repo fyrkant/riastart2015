@@ -25139,7 +25139,7 @@
 	            newstate[action.killer].kills += 1;
 	            return newstate;
 	        case _constants2.default.TAKE_NUKE_STEP:
-	            if (action.killable) {
+	            if (action.killable && action.isalive) {
 	                newstate[action.coward].kills += action.killable.length;
 	            }
 	        default:
@@ -25313,7 +25313,7 @@
 	                        newstate.doing[action.coward] = _constants2.default.ENDS_THE_WORLD;
 	                        newstate.log.push('All hope is lost. ' + action.coward + ' launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ');
 	                    } else {
-	                        newstate.log.push(action.coward + ' died before he could press the' + ' red button and launch the nuclear missiles.');
+	                        newstate.log.push(action.coward + ' died before he could press the red button and launch the nuclear missiles.');
 	                        newstate.defcon = 4;
 	                    }
 	                    return newstate;
@@ -25334,7 +25334,7 @@
 	            return newstate;
 	        case _constants2.default.END_BOMB:
 	            if ((0, _lodash.includes)([_constants2.default.UNLOCKING_KEYPAD, _constants2.default.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
-	                newstate.log.push(action.killer + ' averted total nuclear annihilation.');
+	                newstate.log.push(action.killer + ' averted total nuclear annihilation by bombing ' + action.victim);
 	                newstate.defcon = 4;
 	            }
 	            newstate.doing[action.victim] = _constants2.default.DEAD;
@@ -38068,7 +38068,8 @@
 	                        dispatch({
 	                            type: _constants2.default.TAKE_NUKE_STEP,
 	                            coward: who,
-	                            killable: killable
+	                            killable: killable,
+	                            isalive: getState().battlefield.doing[who] !== _constants2.default.DEAD
 	                        });
 	                    }, 5000);
 	                }, 3000);
@@ -38374,7 +38375,7 @@
 	            ));
 
 	            //controls depend on what we're doing
-	            var controls = (_C$WAITING$C$DUCKING$ = {}, _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.WAITING, buttons.length === 2 ? 'Winner!' : buttons), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.DUCKING, 'ducking'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.BOMBING, 'sending bombs...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.UNLOCKING_KEYPAD, 'unlocking keypad...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.ENTERING_LAUNCH_CODES, 'entering code...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.ENDS_THE_WORLD, 'says his goodbyes...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.DEAD, '...dead...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.AIMING, 'aiming!'), _C$WAITING$C$DUCKING$)[p.doing[name]];
+	            var controls = (_C$WAITING$C$DUCKING$ = {}, _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.WAITING, buttons.length > 1 ? buttons : 'Winner!'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.DUCKING, 'ducking'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.BOMBING, 'sending bombs...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.UNLOCKING_KEYPAD, 'unlocking keypad...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.ENTERING_LAUNCH_CODES, 'entering code...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.ENDS_THE_WORLD, 'says his goodbyes...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.DEAD, '...dead...'), _defineProperty(_C$WAITING$C$DUCKING$, _constants2.default.AIMING, 'aiming!'), _C$WAITING$C$DUCKING$)[p.doing[name]];
 
 	            return _react2.default.createElement(
 	                'div',

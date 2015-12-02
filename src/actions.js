@@ -52,7 +52,8 @@ export default {
                         dispatch({
                             type: C.TAKE_NUKE_STEP,
                             coward: who,
-                            killable: killable
+                            killable: killable,
+                            isalive: getState().battlefield.doing[who] !== C.DEAD
                         });
                     }, 5000);
                 }, 3000);

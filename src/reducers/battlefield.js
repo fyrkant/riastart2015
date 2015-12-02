@@ -50,9 +50,7 @@ export default (state,action) => {
                     action.coward + ' launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ');
             } else {
                 newstate.log.push(
-                    action.coward +
-                    ' died before he could press the' +
-                    ' red button and launch the nuclear missiles.');
+                    action.coward + ' died before he could press the red button and launch the nuclear missiles.');
                 newstate.defcon = 4;
             }
             return newstate;
@@ -72,7 +70,7 @@ export default (state,action) => {
         return newstate;
     case C.END_BOMB:
         if (includes([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
-            newstate.log.push(action.killer + ' averted total nuclear annihilation.');
+            newstate.log.push(action.killer + ' averted total nuclear annihilation by bombing ' + action.victim);
             newstate.defcon = 4;
         }
         newstate.doing[action.victim] = C.DEAD;

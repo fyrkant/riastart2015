@@ -17,8 +17,8 @@ export default (state,action) => {
     case constants.END_BOMB:
         newstate[action.killer].kills += 1;
         return newstate;
-    case constants.TAKE_NUKE_STEP:
-        if (action.killable) {
+    case constants.TAKE_NUKE_STEP:    
+        if (action.killable && action.isalive) {
             newstate[action.coward].kills += action.killable.length;
         }
     default: return state || initialState().heroes;
