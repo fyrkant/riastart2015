@@ -3,13 +3,13 @@ This module contains action creators. They are functions which will return an ob
 These actions are imported by Redux-aware components who need them, in our case it is just Home.
 */
 
-import constants  from './constants';
+import C  from './constants';
 
 export default {
     reset() {
         // A normal action creator, returns a simple object describing the action.
         return {
-            type: constants.RESET
+            type: C.RESET
         };
     },
     duckDown(who) {
@@ -18,13 +18,13 @@ export default {
         // invoke dispatch, now or later using setTimeout or similar.
         return (dispatch, getState) => {
             dispatch({
-                type: constants.DUCK_DOWN,
+                type: C.DUCK_DOWN,
                 coward: who
             });
 
             setTimeout(() => {
                 dispatch({
-                    type: constants.STAND_UP,
+                    type: C.STAND_UP,
                     coward: who
                 });
             },2000);
@@ -33,24 +33,24 @@ export default {
     nuke(who, killable) {
         return (dispatch, getState) => {
             dispatch({
-                type: constants.TAKE_NUKE_STEP,
+                type: C.TAKE_NUKE_STEP,
                 coward: who
             });
 
             setTimeout(() => {
                 dispatch({
-                    type: constants.TAKE_NUKE_STEP,
+                    type: C.TAKE_NUKE_STEP,
                     coward: who
                 });
 
                 setTimeout(() => {
-                    dispatch({type: constants.TAKE_NUKE_STEP,
+                    dispatch({type: C.TAKE_NUKE_STEP,
                         coward: who
                     });
 
                     setTimeout(() => {
                         dispatch({
-                            type: constants.TAKE_NUKE_STEP,
+                            type: C.TAKE_NUKE_STEP,
                             coward: who,
                             killable: killable
                         });
@@ -63,14 +63,14 @@ export default {
         // Another async action using the Redux-thunk syntax
         return (dispatch, getState) => {
             dispatch({
-                type: constants.AIM_AT,
+                type: C.AIM_AT,
                 killer: killer,
                 victim: victim
             });
 
             setTimeout(() => {
                 dispatch({
-                    type: constants.KILL_HERO,
+                    type: C.KILL_HERO,
                     killer: killer,
                     victim: victim
                 });
@@ -81,14 +81,14 @@ export default {
         // Another async action using the Redux-thunk syntax
         return (dispatch,getState) => {
             dispatch({
-                type: constants.BOMB_AT,
+                type: C.BOMB_AT,
                 killer: killer,
                 victim: victim
             });
 
             setTimeout(() => {
                 dispatch({
-                    type: constants.END_BOMB,
+                    type: C.END_BOMB,
                     killer: killer,
                     victim: victim
                 });

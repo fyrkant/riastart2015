@@ -25256,7 +25256,7 @@
 
 	var _constants = __webpack_require__(223);
 
-	var C = _interopRequireWildcard(_constants);
+	var _constants2 = _interopRequireDefault(_constants);
 
 	var _initialstate = __webpack_require__(224);
 
@@ -25265,8 +25265,6 @@
 	var _lodash = __webpack_require__(226);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	/*
 	A reducer is a function that takes the current state and an action, and then returns a
@@ -25278,31 +25276,31 @@
 	    var newstate = Object.assign({}, state); // sloppily copying the old state here, so we never mutate it
 
 	    switch (action.type) {
-	        case C.RESET:
+	        case _constants2.default.RESET:
 	            return (0, _initialstate2.default)().battlefield;
-	        case C.DUCK_DOWN:
-	            newstate.doing[action.coward] = C.DUCKING;
+	        case _constants2.default.DUCK_DOWN:
+	            newstate.doing[action.coward] = _constants2.default.DUCKING;
 	            newstate.log.push(action.coward + ' ducks down like a coward.');
 	            return newstate;
-	        case C.STAND_UP:
-	            if (newstate.doing[action.coward] != C.DEAD) {
-	                newstate.doing[action.coward] = C.WAITING;
+	        case _constants2.default.STAND_UP:
+	            if (newstate.doing[action.coward] != _constants2.default.DEAD) {
+	                newstate.doing[action.coward] = _constants2.default.WAITING;
 	                newstate.log.push(action.coward + ' stands back up.');
 	            }
 	            return newstate;
-	        case C.TAKE_NUKE_STEP:
+	        case _constants2.default.TAKE_NUKE_STEP:
 	            switch (newstate.defcon) {
 	                case 4:
-	                    if (newstate.doing[action.coward] !== C.DEAD) {
+	                    if (newstate.doing[action.coward] !== _constants2.default.DEAD) {
 	                        newstate.defcon -= 1;
-	                        newstate.doing[action.coward] = C.UNLOCKING_KEYPAD;
+	                        newstate.doing[action.coward] = _constants2.default.UNLOCKING_KEYPAD;
 	                        newstate.log.push(action.coward + ' is unlocking the nuclear launch keypad...');
 	                    }
 	                    return newstate;
 	                case 3:
 	                    newstate.defcon -= 1;
-	                    if (newstate.doing[action.coward] !== C.DEAD) {
-	                        newstate.doing[action.coward] = C.ENTERING_LAUNCH_CODES;
+	                    if (newstate.doing[action.coward] !== _constants2.default.DEAD) {
+	                        newstate.doing[action.coward] = _constants2.default.ENTERING_LAUNCH_CODES;
 	                        newstate.log.push(action.coward + ' is entering the nuclear weapons launch codes...');
 	                    } else {
 	                        newstate.log.push(action.coward + ' died before he could enter the nuclear launch codes.');
@@ -25311,8 +25309,8 @@
 	                    return newstate;
 	                case 2:
 	                    newstate.defcon -= 1;
-	                    if (newstate.doing[action.coward] !== C.DEAD) {
-	                        newstate.doing[action.coward] = C.ENDS_THE_WORLD;
+	                    if (newstate.doing[action.coward] !== _constants2.default.DEAD) {
+	                        newstate.doing[action.coward] = _constants2.default.ENDS_THE_WORLD;
 	                        newstate.log.push('All hope is lost. ' + action.coward + ' launched an array of grade A nuclear weapons and in 5 seconds all life on this earth will be extinguished. ');
 	                    } else {
 	                        newstate.log.push(action.coward + ' died before he could press the' + ' red button and launch the nuclear missiles.');
@@ -25321,29 +25319,29 @@
 	                    return newstate;
 	                case 1:
 	                    newstate.log.push('A white light, a crack - then silence.');
-	                    newstate.doing[action.coward] = C.DEAD;
+	                    newstate.doing[action.coward] = _constants2.default.DEAD;
 	                    (0, _lodash.forEach)(action.killable, function (battler) {
-	                        return newstate.doing[battler] = C.DEAD;
+	                        return newstate.doing[battler] = _constants2.default.DEAD;
 	                    });
 	                    newstate.standing = 0;
 	                    return newstate;
 	                default:
 	                    return newstate;
 	            }
-	        case C.BOMB_AT:
-	            newstate.doing[action.killer] = C.BOMBING;
+	        case _constants2.default.BOMB_AT:
+	            newstate.doing[action.killer] = _constants2.default.BOMBING;
 	            newstate.log.push(action.killer + ' sends bombs to ' + action.victim + '!');
 	            return newstate;
-	        case C.END_BOMB:
-	            if ((0, _lodash.includes)([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
+	        case _constants2.default.END_BOMB:
+	            if ((0, _lodash.includes)([_constants2.default.UNLOCKING_KEYPAD, _constants2.default.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
 	                newstate.log.push(action.killer + ' averted total nuclear annihilation.');
 	                newstate.defcon = 4;
 	            }
-	            newstate.doing[action.victim] = C.DEAD;
+	            newstate.doing[action.victim] = _constants2.default.DEAD;
 	            newstate.standing = newstate.standing - 1;
 
-	            if (newstate.doing[action.killer] !== C.DEAD) {
-	                newstate.doing[action.killer] = C.WAITING;
+	            if (newstate.doing[action.killer] !== _constants2.default.DEAD) {
+	                newstate.doing[action.killer] = _constants2.default.WAITING;
 	                newstate.log.push(action.killer + ' celebrates the death of ' + action.victim + '!');
 	                if (newstate.standing === 1) {
 	                    newstate.log.push(action.killer + ' WINS!!');
@@ -25356,35 +25354,35 @@
 	                newstate.log.push(action.killer + ' WINS!!');
 	            }
 	            return newstate;
-	        case C.AIM_AT:
-	            newstate.doing[action.killer] = C.AIMING;
+	        case _constants2.default.AIM_AT:
+	            newstate.doing[action.killer] = _constants2.default.AIMING;
 	            newstate.log.push(action.killer + ' takes aim at ' + action.victim + '!');
 	            return newstate;
-	        case C.KILL_HERO:
+	        case _constants2.default.KILL_HERO:
 	            // the shooter has died before he got the shot off
-	            if (state.doing[action.killer] === C.DEAD) {
+	            if (state.doing[action.killer] === _constants2.default.DEAD) {
 	                newstate.log.push('The trigger finger twitches on ' + action.killer + '\'s corpse');
 	            } else {
-	                newstate.doing[action.killer] = C.WAITING; // whatever happens we should no longer be aiming
+	                newstate.doing[action.killer] = _constants2.default.WAITING; // whatever happens we should no longer be aiming
 	                // the target is ducking
-	                if (state.doing[action.victim] === C.DUCKING) {
+	                if (state.doing[action.victim] === _constants2.default.DUCKING) {
 	                    newstate.log.push(action.victim + ' dodges a shot from ' + action.killer + '!');
 	                    // the target has already been killed
-	                } else if (state.doing[action.victim] === C.DEAD) {
+	                } else if (state.doing[action.victim] === _constants2.default.DEAD) {
 	                        newstate.log.push(action.killer + ' blasts ' + action.victim + '\'s corpse.');
 	                        // we kill the target!
 	                    } else {
-	                            if (state.doing[action.victim] === C.AIMING) {
+	                            if (state.doing[action.victim] === _constants2.default.AIMING) {
 	                                newstate.log.push(action.killer + ' killed ' + action.victim + ' before he got his shot off!');
 	                            } else {
 	                                newstate.log.push(action.killer + ' killed ' + action.victim + '!');
 	                            }
 
-	                            if ((0, _lodash.includes)([C.UNLOCKING_KEYPAD, C.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
+	                            if ((0, _lodash.includes)([_constants2.default.UNLOCKING_KEYPAD, _constants2.default.ENTERING_LAUNCH_CODES], newstate.doing[action.victim])) {
 	                                newstate.log.push(action.killer + ' averted total nuclear annihilation by killing ' + action.victim);
 	                                newstate.defcon = 4;
 	                            }
-	                            newstate.doing[action.victim] = C.DEAD;
+	                            newstate.doing[action.victim] = _constants2.default.DEAD;
 	                            newstate.standing = newstate.standing - 1;
 	                            if (newstate.standing === 1) {
 	                                newstate.log.push(action.killer + ' WINS!!');
